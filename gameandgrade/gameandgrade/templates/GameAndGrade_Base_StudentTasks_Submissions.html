@@ -1,0 +1,30 @@
+<div class="submissionField">
+<!-- {% for subTask, sub in subs.items %}
+	{% if subTask == openTask.id %}
+		<div>{{ sub }}</div>
+	{% endif %}
+{% empty %}
+	<div>No submissions.</div>
+{% endfor %} -->
+{% for upload in allUploads %}
+	<div>{{ upload.title }}</div>
+{% empty %}
+	<div>No submissions.</div>
+{% endfor %}
+{% if test == 1 %}
+	<div class="submissionEntry">
+			<h4>New Submission</h4>
+			<form name="myWebForm" action="uploadFile/" method="post" enctype="multipart/form-data">
+			    {% csrf_token %}
+			    <input type="text" name="title" />
+				<input type="hidden" name="MAX_FILE_SIZE" value='500' />
+				<input type="file" name="fileUpload" />
+			    <input type="submit" value="Upload" />
+			</form>
+
+			<form id="copypaste"></form>
+		</div>
+{% else %}
+	<div> Sorry, but submissions are no longer allowed. </div>
+{% endif %}
+</div>

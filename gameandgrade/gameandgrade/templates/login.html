@@ -1,0 +1,27 @@
+{% extends 'GameAndGrade_Base.html' %}
+
+{% block content %}
+
+<section>
+    {% if form.errors %}
+        <div>Your username and password didn't match, please try again.</div>
+    {% endif %}
+
+    <form method="post" action=".">
+    	{% csrf_token %}
+        <div>
+            <label for="id_username">Username:</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="id_password">Password:</label>
+            {{ form.password }}
+        </div>
+        <input type="submit" value="login" />
+        
+        <input type="hidden" name="next" value="{{ next }}" />
+
+    </form>
+</section>
+
+{% endblock %}
