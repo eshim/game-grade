@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 class User(models.Model):
     first = models.CharField(max_length=50)    
@@ -12,8 +13,24 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     descrip = models.TextField('Description')
     xpVal = models.IntegerField('Maximum Experience')
-    openTime = models.DateTimeField(auto_now=True)    
-    closeTime = models.DateTimeField(auto_now=True)
+    openTime = models.DateTimeField('Start Time')    
+    closeTime = models.DateTimeField('End Time')   
+    def __unicode__(self):
+        return self.title
+    def isOpen(self):
+        return (datetime.datetime.now() >= self.openTime) and (datetime.datetime.now() <= self.closeTime)
+    isOpen.admin_order_field = 'openTime'
+    isOpen.boolean = True
+    isOpen.short_description = 'Currently Open?'
+    
+class Exercise(models.Model):
+    task = models.ForeignKey(Task)
+    title = models.CharField(max_length=200)
+    descrip = models.TextField('Description')
+    xpVal = models.IntegerField('Maximum Experience')
+    tags = models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.title
     
 class Submission(models.Model):
     userID = models.ForeignKey(User)

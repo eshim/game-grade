@@ -42,13 +42,13 @@ def allTasks(request):
 # ------------------------------------------------------------------------------------------------
 # This creates a fake user. THIS CODE IS A HACK, REMOVE WHEN ACTUALLY CREATING LEGITMITATE USERS
 #------------------------------------------------------------------------------------------------
-    username = "fakeUser"
-#    Put plaintext password in method
-#    password = hashers.make_password('')
-#    just try plaintext password
-    password = 'flower10'
-    user = authenticate(username=username, password=password)
-    request.user.id = user.id
+#    username = "fakeUser"
+##    Put plaintext password in method
+##    password = hashers.make_password('')
+##    just try plaintext password
+#    password = 'flower10'
+#    user = authenticate(username=username, password=password)
+#    request.user.id = user.id
     
 # -------------------------------------
 # Miscellaneous testing for fake user
@@ -133,6 +133,8 @@ def createTask(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             print "valid!"
+            form.save()
+            print "saved!"
             return HttpResponseRedirect('/tasks/')
         else:
             print "invalid! errors are:"
