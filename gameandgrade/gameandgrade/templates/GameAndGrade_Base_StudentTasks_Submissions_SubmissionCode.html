@@ -95,17 +95,19 @@
 			<fieldset id="submissionCode_codeEditorPylintOutputWrapper">
 			
 			<form>
-				<textarea id="code" name="code">			
-{{ currSub }}
-			</textarea>
+				<textarea id="code" name="code">{{ currSub }}</textarea>
 			</form>
 
 			<div id="submissionCode_pylintOutput">
 				<div id="indent">
-				{% autoescape off %}
-				{{ evalSub }}
-				{% endautoescape %}
-			</div>	
+					{% if evalSub %}
+						{% autoescape off %}
+							{{ evalSub }}
+						{% endautoescape %}
+					{% else %}
+						<div>There were no problems found! Congratulations on submitting perfect code.</div>
+					{% endif %}
+				</div>	
 			</div>
 			</fieldset>
 			<div id="submissionCode_submissionOptions">
@@ -127,7 +129,7 @@
 				    <option>vibrant-ink</option>
 				    <option>xq-dark</option>
 				</select>
-				<button type="submit" onclick="submitCode();">Submit Code</button>
+				<!-- <button type="submit" onclick="submitCode();">Submit Code</button> -->
 				</p>
 				
 			</div>

@@ -78,7 +78,7 @@ def readable_output(output_file):
 
         #Multiple statements on a line (C0321)
         if re.search('More than one statement on a single line', output):
-            lines = re.findall(r'%s( More than one statement on a single line'%DIG, output)
+            lines = re.findall(r'%s More than one statement on a single line' % DIG, output)
 
             for l in lines:
                 pretty_output += ("On line %s you have more than one statement.\n"%l[0] +
