@@ -14,7 +14,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/Users/frank_em/Documents/Aptana Studio 3 Workspace/gameandgrade/sqlite.db',                      # Or path to database file if using sqlite3.
+        'NAME': '/Users/frank_em/Documents/Aptana Studio 3 Workspace/game-grade/gameandgrade/sqlite.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
