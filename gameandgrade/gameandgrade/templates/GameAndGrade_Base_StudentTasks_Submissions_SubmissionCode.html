@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+		<title>GameAndGrade_Base_Submissions</title>
+		<meta name="description" content="" />
+		<meta name="author" content="eshim" />
+
+		<!-- <meta name="viewport" content="width=device-width; initial-scale=1.0" /> -->
+
+		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		
+		<!--jQuery-->
+		<script src="{{ STATIC_URL }}jQueryCore/js/jquery-1.7.2.min.js"></script>
+		<!--CodeMirror-->
+		<link rel="stylesheet" href="{{ STATIC_URL }}CodeMirror-2.3/lib/codemirror.css">
+		<script src="{{ STATIC_URL }}CodeMirror-2.3/lib/codemirror.js"></script>
+		<script src="{{ STATIC_URL }}CodeMirror-2.3/mode/python/python.js"></script>
+		<!--CodeMirror Themes-->
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/elegant.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/neat.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/erlang-dark.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/night.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/monokai.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/cobalt.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/eclipse.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/rubyblue.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/lesser-dark.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/xq-dark.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/ambiance.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/blackboard.css" rel="stylesheet" type="text/css" />
+		<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/vibrant-ink.css" rel="stylesheet" type="text/css" />
+		<!--CodeMirror Add-ons-->
+		<script src="{{ STATIC_URL }}CodeMirror-2.3/lib/util/searchcursor.js"></script> <!--Necessary for match-highlighting-->
+		<script src="{{ STATIC_URL }}CodeMirror-2.3/lib/util/match-highlighter.js"></script>
+		<!--CSS/Less-->
+		<link href ="{{ STATIC_URL }}css/GameAndGrade_Base.css" rel="stylesheet" type="text/css"  />
+<!-- 		<script src="{{ STATIC_URL }}Javascript/less-1.3.0.min.js" ></script> -->		
+		<!--Initialize-->
+		<script type="text/javascript" src="{{ STATIC_URL }}Javascript/Base.js"></script>
+		<script type="text/javascript" src="{{ STATIC_URL }}Javascript/Base_SubmissionCode.js"></script>
+		
+	</head>
+
+	<body>
+		<div id="headerBackground">
+			<div id="headerContainer">
+				<div id="headerLogo">
+					<a href="/tasks">Game and Grade</a>
+				</div>
+				<div id="accountContainer">
+					<div id="accountInfo">
+						<p>
+					{% if user.is_authenticated %}
+						<div> Welcome, {{ user.username }}! </div>
+						
+					{% else %}
+						<a href="/login/?next={{request.path}}">Login</a>
+					{% endif %}
+					</p>
+					</div>
+					<ul id="accountOptionsList">
+						<li><a href="_blank">Help</a></li>
+						<li><a href="_blank">Settings</a></li>
+						<li><a href='/logout/'>Logout</a></li>
+					</ul>
+					<div id="searchBar">
+						<form id="search">
+							<input type="text"  name="searchTerm" placeholder="Search" />
+						</form>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		<div id="contentContainer">
+			<div id="submissionCode_submissionContent">
+				<!--<a id="submissionCode_backButton" href="GameAndGrade_Base.html">Back to "Task Name"</a>-->
+			<div id="submissionCode_submissionNavBar">
+				<div id="submissionCode_submissionTitle">Current Submission Title</div>
+				<div id="submissionCode_submissionNavButtonsContainer">
+				<ul id="submissionCode_submissionNav">
+				<li><a href="#">First</a></li><li><a href="#">Previous</a></li><li>Next</li><li>Latest</li>
+				</ul>
+				</div>
+			</div>
+			<fieldset id="submissionCode_codeEditorPylintOutputWrapper">
+			
+			<form>
+				<textarea id="code" name="code">			
+{{ currSub }}
+			</textarea>
+			</form>
+
+			<div id="submissionCode_pylintOutput">
+				<div id="indent">
+				{% autoescape off %}
+				{{ evalSub }}
+				{% endautoescape %}
+			</div>	
+			</div>
+			</fieldset>
+			<div id="submissionCode_submissionOptions">
+				
+				<p>Select a theme: 
+				<select id=select>
+				    <option selected>default</option>
+				    <option>ambiance</option>
+				    <option>blackboard</option>
+				    <option>cobalt</option>
+				    <option>eclipse</option>
+				    <option>elegant</option>
+				    <option>erlang-dark</option>
+				    <option>lesser-dark</option>
+				    <option>monokai</option>
+				    <option>neat</option>
+				    <option>night</option>
+				    <option>rubyblue</option>
+				    <option>vibrant-ink</option>
+				    <option>xq-dark</option>
+				</select>
+				<button type="submit" onclick="submitCode();">Submit Code</button>
+				</p>
+				
+			</div>
+			
+		</div>
+		</div> <!--content Container-->
+
+		<!--
+		<footer>
+					<p>
+						&copy; Copyright  by eshim
+					</p>
+				</footer>-->
+		
+		
+	</body>
+</html>

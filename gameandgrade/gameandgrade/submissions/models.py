@@ -1,13 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
-class User(models.Model):
-    first = models.CharField(max_length=50)    
-    last = models.CharField(max_length=50)
-    createTime = models.DateTimeField('When Created')
-    email = models.CharField(max_length=50)
-    twitter = models.CharField(max_length=50)
-    website = models.CharField(max_length=100)
+class UserID(models.Model):
+    user = models.ForeignKey(User)
+    def __unicode__(self):
+        return str(self.user.username)
     
 class Task(models.Model):
     title = models.CharField(max_length=200)
@@ -15,13 +13,13 @@ class Task(models.Model):
     xpVal = models.IntegerField('Maximum Experience')
     openTime = models.DateTimeField('Start Time')    
     closeTime = models.DateTimeField('End Time')   
-    def __unicode__(self):
-        return self.title
     def isOpen(self):
         return (datetime.datetime.now() >= self.openTime) and (datetime.datetime.now() <= self.closeTime)
     isOpen.admin_order_field = 'openTime'
     isOpen.boolean = True
     isOpen.short_description = 'Currently Open?'
+    def __unicode__(self):
+        return self.title
     
 class Exercise(models.Model):
     task = models.ForeignKey(Task)
@@ -31,13 +29,13 @@ class Exercise(models.Model):
     tags = models.CharField(max_length=100)
     def __unicode__(self):
         return self.title
-    
-class Submission(models.Model):
-    userID = models.ForeignKey(User)
-    taskID = models.ForeignKey(Task)
-    submitTime = models.DateTimeField(auto_now=True)
-#    ptsGiv = models.FloatField() --Commented because it gave errors. Will figure out later.
 
 class Upload(models.Model):
     title = models.CharField(max_length=50)
-    fileUpload = models.FileField(upload_to = 'file_uploads')
+    fileName = models.CharField(max_length=50, blank=True, null=True)
+    fileUpload = models.FileField(upload_to='file_uploads')
+    userID = models.ForeignKey(User)
+    task = models.ForeignKey(Task)
+    uploadTime = models.DateTimeField(auto_now_add=True)
+    def __unicode__(self):
+        return self.title

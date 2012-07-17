@@ -39,7 +39,7 @@
 				</div>
 				
 				{% with 1 as test %}
-					{% include "GameAndGrade_Base_StudentTasks_Submissions.html" %}
+					{% include "GameAndGrade_Base_StudentTasks_Submissions.html" with taskID=openTask.id %}
 				{% endwith %}
 			</div>
 		{% empty %}

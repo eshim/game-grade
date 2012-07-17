@@ -10,8 +10,10 @@
 		<title>Game and Grade</title>
 		<link href ="{{ STATIC_URL }}css/GameAndGrade_Base.css" rel="stylesheet" type="text/css"  />
 		<script src="Javascript/less-1.3.0.min.js" ></script>
-		<script type="text/javascript" src="{{ STATIC_URL }}Javascript/ChangeText.js"></script>
-	</head>
+<!-- 		<script type="text/javascript" src="{{ STATIC_URL }}Javascript/ChangeText.js"></script> -->
+
+		<script type="text/javascript" src="{{ STATIC_URL }}Javascript/Base.js"></script>
+		
 	
 	<body>
 		
@@ -22,13 +24,27 @@
 					Game and Grade
 				</div>
 			
-				<div id="loginContainer">
+				<div id="accountContainer">
+					<div id="accountInfo">
+						<p>
 					{% if user.is_authenticated %}
 						<div> Welcome, {{ user.username }}! </div>
-						<div> <a href='/logout/'>Logout</a></div>
+						
 					{% else %}
 						<a href="/login/?next={{request.path}}">Login</a>
 					{% endif %}
+					</p>
+					</div>
+					<ul id="accountOptionsList">
+						<li><a href="_blank">Help</a></li>
+						<li><a href="_blank">Settings</a></li>
+						<li><a href='/logout/'>Logout</a></li>
+					</ul>
+					<div id="searchBar">
+						<form id="search">
+							<input type="text"  name="searchTerm" placeholder="Search" />
+						</form>
+					</div>
 				</div>
 				
 			</div>

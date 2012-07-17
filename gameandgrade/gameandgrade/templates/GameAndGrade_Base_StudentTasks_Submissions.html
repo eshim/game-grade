@@ -1,23 +1,26 @@
 <div class="submissionField">
-<!-- {% for subTask, sub in subs.items %}
-	{% if subTask == openTask.id %}
-		<div>{{ sub }}</div>
-	{% endif %}
-{% empty %}
-	<div>No submissions.</div>
-{% endfor %} -->
-{% for upload in allUploads %}
-	<div>{{ upload.title }}</div>
-{% empty %}
-	<div>No submissions.</div>
-{% endfor %}
+<div>
+	<div class="submissionEntry">
+		<h4>My Submissions</h4>
+	</div>	
+	{% for subs in filtSubs %}
+		{% with subs.id as subID %}
+			{% if subs.task.id == openTask.id or subs.task.id == closedTask.id %}
+				<a href="/subs/{{subs.id}}/"> {{subs.title}} (Uploaded on {{ subs.uploadTime|date:"D, M j, Y f A" }}) </a> <br />
+			{% endif %}
+		{% endwith %}
+	{% empty %}
+		<div>No submissions.</div>
+	{% endfor %}
+</div>
 {% if test == 1 %}
 	<div class="submissionEntry">
 			<h4>New Submission</h4>
 			<form name="myWebForm" action="uploadFile/" method="post" enctype="multipart/form-data">
 			    {% csrf_token %}
-			    <input type="text" name="title" />
-				<input type="hidden" name="MAX_FILE_SIZE" value='500' />
+				<input type="hidden" name="MAX_FILE_SIZE" value="500" />
+				<input type="text" name="title" value="File Name"/>
+				<input type="hidden" name="taskID" value={{ taskID }} />
 				<input type="file" name="fileUpload" />
 			    <input type="submit" value="Upload" />
 			</form>
