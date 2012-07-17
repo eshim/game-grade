@@ -1,0 +1,3 @@
+************* Module FizzBuzz Updated
+C0103:  1,0: Invalid name "FizzBuzz Updated" (should match (([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$)
+C0111:  1,0: Missing docstring
