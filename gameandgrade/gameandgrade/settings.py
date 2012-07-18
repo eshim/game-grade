@@ -13,8 +13,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-print os.path.join(PROJECT_PATH, '../sqlite.db')
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
