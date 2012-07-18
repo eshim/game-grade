@@ -57,14 +57,14 @@
 				</div>
 				<div id="accountContainer">
 					<div id="accountInfo">
-						<p>
+						
 					{% if user.is_authenticated %}
-						<div> Welcome, {{ user.username }}! </div>
+						<p> Welcome, {{ user.username }}!</p>
 						
 					{% else %}
 						<a href="/login/?next={{request.path}}">Login</a>
 					{% endif %}
-					</p>
+					
 					</div>
 					<ul id="accountOptionsList">
 						<li><a href="_blank">Help</a></li>

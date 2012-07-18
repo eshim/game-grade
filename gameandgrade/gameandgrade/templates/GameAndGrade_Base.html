@@ -26,19 +26,20 @@
 			
 				<div id="accountContainer">
 					<div id="accountInfo">
-						<p>
 					{% if user.is_authenticated %}
-						<div> Welcome, {{ user.username }}! </div>
-						
-					{% else %}
-						<a href="/login/?next={{request.path}}">Login</a>
+						<p> Welcome, {{ user.username }}! </p>
 					{% endif %}
-					</p>
 					</div>
 					<ul id="accountOptionsList">
 						<li><a href="_blank">Help</a></li>
 						<li><a href="_blank">Settings</a></li>
-						<li><a href='/logout/'>Logout</a></li>
+						<li>
+							{% if user.is_authenticated %}
+							<a href='/logout/'>Logout</a>
+							{% else %}
+							<a href="/login/?next={{request.path}}">Login</a>
+							{% endif %}
+						</li>
 					</ul>
 					<div id="searchBar">
 						<form id="search">
