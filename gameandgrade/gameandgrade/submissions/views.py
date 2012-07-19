@@ -36,6 +36,10 @@ def tasks(request):
     Displays tasks organized by start and end time
     """
     
+    tester = Upload.objects.all()
+    for rec in tester:
+        print "is %s most recent?:" % (rec.title), rec.mostRecent
+    
     filtSubs = Upload.objects.filter(
             userID=request.user).order_by('-uploadTime') # This gets all upload objects a particular user submitted
     allTasks = Task.objects.all().order_by('-openTime')
@@ -62,6 +66,21 @@ def uploadFile(request):
     Uploads a submissions file to be viewed on the site
     """
     
+    def setMostRecent(upload):
+        sameSubType = Upload.objects.filter(userID=upload.userID, task=upload.task)
+        print "sameSubs:", sameSubType
+        
+        for sub in sameSubType:
+            sub.mostRecent = False
+            print "%s: %s" % (sub, sub.mostRecent)
+            sub.save()
+        
+        upload.mostRecent = True
+        upload.save()
+        
+        print "upload:", upload.mostRecent
+
+    
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         
@@ -87,9 +106,11 @@ def uploadFile(request):
             upload_instance.fileUpload = path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName)
             upload_instance.save()  # post_save method is called to generate PyLint output from the uploaded file.
             
+            setMostRecent(upload_instance)
+            
             return HttpResponseRedirect('/tasks/')
         else: 
-            return HttpResponseRedirect('/tasks/')  # If not valid, reloads task page - eventually may reload form if possible.
+            return HttpResponseRedirect('/tasks/')  # If not valid, reloads task page - eventually may be preventable.
     else:
         form = Upload()
     
@@ -128,4 +149,4 @@ def viewSub(request, subID):
     e = e.replace('\n', '<br>')  # Replaces all newline characters with a break tag for formatting -- TO BE CHANGED LATER?
     
     return render_to_response('GameAndGrade_Base_StudentTasks_Submissions_SubmissionCode.html', 
-                              {'currSub': subString, 'evalSub': e}, context_instance=RequestContext(request))
+                              {'currSub': subString, 'evalSub': e, 'subs': s}, context_instance=RequestContext(request))

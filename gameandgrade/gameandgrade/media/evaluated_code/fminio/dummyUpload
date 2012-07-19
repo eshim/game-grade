@@ -1,4 +1,0 @@
-************* Module dummyUpload
-C0301:  3,0: Line too long (94/80)
-C0103:  1,0: Invalid name "dummyUpload" (should match (([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$)
-C0111:  1,0: Missing docstring

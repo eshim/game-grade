@@ -31,7 +31,7 @@ class Task(models.Model):
     isOpen.admin_order_field = 'openTime'
     isOpen.boolean = True
     isOpen.short_description = 'Currently Open?'
-    
+        
     def __unicode__(self):
         return self.title
     
@@ -56,11 +56,14 @@ class Upload(models.Model):
     For file uploads. Allows custom titling (which will soon be taken away), auto assignment of upload time, and relationship to
     the current user's ID and the task it is being submitted to, so that submissions are viewed organized by user and task 
     """
+    
     title = models.CharField(max_length=50)
     fileUpload = models.FileField(upload_to='file_uploads')
     userID = models.ForeignKey(User)
+    userID.short_description = 'User'
     task = models.ForeignKey(Task)
-    uploadTime = models.DateTimeField(auto_now_add=True)
+    uploadTime = models.DateTimeField('Uploaded On', auto_now_add=True)
+    mostRecent = models.BooleanField('Most Recent', default=True)
     
     def __unicode__(self):
         return self.title

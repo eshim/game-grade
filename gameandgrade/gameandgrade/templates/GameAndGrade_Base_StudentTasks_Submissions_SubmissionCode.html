@@ -83,12 +83,15 @@
 		
 		<div id="contentContainer">
 			<div id="submissionCode_submissionContent">
-				<!--<a id="submissionCode_backButton" href="GameAndGrade_Base.html">Back to "Task Name"</a>-->
+				<!--<a id="submissionCode_backButton" href=/tasks/">Back to Tasks</a>-->
 			<div id="submissionCode_submissionNavBar">
 				<div id="submissionCode_submissionTitle">Current Submission Title</div>
 				<div id="submissionCode_submissionNavButtonsContainer">
 				<ul id="submissionCode_submissionNav">
-				<li><a href="#">First</a></li><li><a href="#">Previous</a></li><li>Next</li><li>Latest</li>
+				<li><a href="/subs/1/">First</a></li>
+				<li><a href="/subs/{{ subs.id|add:'-1' }}/">Previous</a></li>
+				<li><a href="/subs/{{ subs.id|add:'1' }}/">Next</a></li>
+				<li>Latest</li>
 				</ul>
 				</div>
 			</div>
