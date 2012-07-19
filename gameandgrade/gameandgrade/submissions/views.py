@@ -1,143 +1,131 @@
 from gameandgrade.submissions.models import Task, Upload, UserID
-from django.contrib.auth.decorators import login_required
 from gameandgrade.submissions.upload import UploadForm
-from django.contrib.auth import authenticate, logout
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.template import RequestContext
-from gameandgrade import settings
-from gameandgrade import parser
-from datetime import datetime
-import subprocess
-import datetime
-import os
+from gameandgrade                    import parser
 
+from django.contrib.auth.decorators  import login_required
+from django.contrib.auth             import authenticate, logout
+from django.db.models.signals        import post_save
+from django.dispatch                 import receiver
 
-# ----------------------------------
-# Post-Save Process for Evaluation
-#---------------------------------
+from django.core.files.storage       import default_storage
+from django.shortcuts                import render_to_response
+from django.http                     import HttpResponseRedirect
+from django.template                 import RequestContext
 
-@receiver(post_save, sender=Upload)
-def evaluate(sender, **kwargs):
-    inPath = str(kwargs['instance'].fileUpload)
-    outPath = inPath.replace("file_uploads","evaluated_code")
-    inPath = inPath.replace(" ","\ ")
+from django.contrib.auth.models      import User
+from gameandgrade                    import settings
+from datetime                        import datetime
+
+from subprocess                      import Popen
+from shlex                           import split
+from os                              import makedirs, path
+
     
-    print "in: " + inPath
-    print "out: " + outPath
+def logout_page(request):
+    """
+    Log users out and re-direct them to the main page.
+    """
     
-    import shlex
-    cmdLine = "pylint --reports=n --include-ids=y --disable=F,I,R,W " + inPath 
-    cmds = shlex.split(cmdLine)
-    p = subprocess.Popen(cmds,stdout=open(outPath,'w'))
-    stdout,stderr = p.communicate()
-    
-# --------------------------
-# View for Uploading Files
-#--------------------------
+    logout(request)
+    return HttpResponseRedirect('/tasks')  # This will need to change to '/' once we create a home page.
 
-def uploadFile(request):
-    from django.core.files.storage import default_storage
-    print "got to method"
-    if request.method == 'POST':
-        print 'Post'
-        form = UploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            print request.FILES
-            myFile = request.FILES['fileUpload']
-            print "got validated"
-            upload_instance = form.save(commit=False)
-            upload_instance.userID = request.user
-            upload_instance.task = Task.objects.get(pk=request.POST['taskID'])
-            print upload_instance.fileUpload
-            saveLocation = str(upload_instance.userID)
-            try:
-                os.makedirs(os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation))
-            except:
-                pass
-            try:
-                os.makedirs(os.path.join(settings.MEDIA_ROOT,'evaluated_code', saveLocation))
-            except:
-                pass
-            print os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation)
-            # timestamp = upload_instance.uploadTime.strftime('%a, %d %b, %Y at %I:%M %p')
-            fileName = upload_instance.fileName = upload_instance.title
-            print upload_instance.fileName
-            default_storage.save(os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName),myFile)            
-            upload_instance.fileUpload = os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName)
-            # Pylinting is done and saved here
-            # Ex. Pylint: subprocess.call(pylint --reports=n --include-ids=y <insert filepath here> shell=False)
-            upload_instance.save()
-            print 'saved'
-            return HttpResponseRedirect('/tasks/')
-        else: 
-            print "got to validation else"
-            print form.errors  
-    else:
-        form = Upload()
-    return render_to_response('GameAndGrade_Base_StudentTasks.html', {'form': form})
 
-# ------------------------
-# View for Viewing Tasks
-#------------------------
-
-@login_required(login_url='/login/')
+@login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't error.
 def tasks(request):
-    filtSubs = Upload.objects.filter(userID=request.user).order_by('-uploadTime')
-    print 'Filtered Subs', filtSubs
+    """
+    Displays tasks organized by start and end time
+    """
     
+    filtSubs = Upload.objects.filter(
+            userID=request.user).order_by('-uploadTime') # This gets all upload objects a particular user submitted
     allTasks = Task.objects.all().order_by('-openTime')
-    allUploads = Upload.objects.all().order_by('-uploadTime')
-    print "All Submissions", allUploads
     openTasks=[]
     closedTasks=[]
     
     for x in allTasks:
-        if datetime.datetime.now() < x.openTime:
+        if datetime.now() < x.openTime:  # This is so that tasks that are created before starting time are viewable until then.
             pass
-        elif datetime.datetime.now() >= x.openTime and datetime.datetime.now() <= x.closeTime:
+        elif (datetime.now() >= x.openTime and 
+              datetime.now() <= x.closeTime):  # Or, in other words, if it's during the lifetime of the task.
             openTasks.append(x)
-        else:
+        else:  # If it's after the task has closed, add it to the closedTasks list
             closedTasks.append(x)
 
     return render_to_response(
         'GameAndGrade_Base_StudentTasks.html',
         {'openTasks': openTasks, 'closedTasks': closedTasks, 'filtSubs': filtSubs},
         context_instance=RequestContext(request))
-    
-# ----------------------
-# View for Logging Out
-#----------------------
-    
-def logout_page(request):
-    """
-    Log users out and re-direct them to the main page.
-    """
-    logout(request)
-    return HttpResponseRedirect('/tasks') # Note need to change to '/' once we create a home page
 
-# -------------------------------
-# View for Viewing a Submission
-#-------------------------------
+
+def uploadFile(request):
+    """
+    Uploads a submissions file to be viewed on the site
+    """
+    
+    if request.method == 'POST':
+        form = UploadForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            myFile = request.FILES['fileUpload']
+            upload_instance = form.save(commit=False)  # Saves the form but don't commit it since some fields are still empty.
+            upload_instance.userID = request.user  # Saves the current user's id to ForeignKey to allow sorting in Tasks view.
+            upload_instance.task = Task.objects.get(
+                    pk=request.POST['taskID'])  # Save the current task's ID to allow sorting in Tasks view
+            saveLocation = str(upload_instance.userID)
+            
+            try:  # Try to make a directory with user's name if not created for file uploads.
+                makedirs(path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation))
+            except:
+                pass
+            try:  # Try to make a directory with user's name if not created for PyLint output.
+                makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code', saveLocation))
+            except:
+                pass
+            
+            fileName = upload_instance.title  # This is what the uploaded file's name will be.
+            default_storage.save(path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName),myFile)  # Save to disc          
+            upload_instance.fileUpload = path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName)
+            upload_instance.save()  # post_save method is called to generate PyLint output from the uploaded file.
+            
+            return HttpResponseRedirect('/tasks/')
+        else: 
+            return HttpResponseRedirect('/tasks/')  # If not valid, reloads task page - eventually may reload form if possible.
+    else:
+        form = Upload()
+    
+    return render_to_response('GameAndGrade_Base_StudentTasks.html', {'form': form})
+
+
+@receiver(post_save, sender=Upload)  # When an Upload object is saved, also do the following function
+def evaluate(sender, **kwargs):
+    """
+    Will generate a PyLint output file that evaluates an uploaded file.
+    """
+    
+    inPath = str(kwargs['instance'].fileUpload)  # The path to the user's uploaded code
+    outPath = inPath.replace("file_uploads","evaluated_code")  # The path to the generated PyLint output
+    inPath = inPath.replace(" ","\ ")  # This prevents spaces in the inpath from becoming individual shell commands
+    cmdLine = "pylint --reports=n --include-ids=y --disable=F,I,R,W " + inPath  # Builds the command to be run by the shell 
+    cmds = split(cmdLine)  # This makes the commands above readable to the shell.
+    p = Popen(cmds,stdout=open(outPath,'w'))  # This executes the command created and saves output
+    stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
+
 
 def viewSub(request, subID):
-    s = Upload.objects.get(pk=subID)
+    """
+    Allows you to view a partcular submission's code and the problems PyLint has found with the code.
+    """
+    
+    s = Upload.objects.get(pk=subID)  # Get the submission that was selected.
     currUser = request.user
-    print currUser
-    fileName = s.title
-    print fileName
     codePath = s.fileUpload.path
-    print "code path: ", codePath
-    evalCodePath = codePath.replace("file_uploads","evaluated_code")
-    print "evaluated code path: ", evalCodePath
-    f = open(codePath, mode='r')
-    subString = f.read()
-    f.close()
-    print subString
-    e = parser.readable_output(evalCodePath)
-    e = e.replace('\n', '<br>')
-    print e
-    return render_to_response('GameAndGrade_Base_StudentTasks_Submissions_SubmissionCode.html', {'currSub': subString, 'evalSub': e}, context_instance=RequestContext(request))
+    evalCodePath = codePath.replace("file_uploads","evaluated_code")  # This works since the only difference in paths are this.
+    
+    with open(codePath, mode='r') as f:
+        subString = f.read()    
+    
+    e = parser.readable_output(evalCodePath)  # Sends path to PyLint file to parser file to make user output user friendly.
+    e = e.replace('\n', '<br>')  # Replaces all newline characters with a break tag for formatting -- TO BE CHANGED LATER?
+    
+    return render_to_response('GameAndGrade_Base_StudentTasks_Submissions_SubmissionCode.html', 
+                              {'currSub': subString, 'evalSub': e}, context_instance=RequestContext(request))

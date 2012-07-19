@@ -1,6 +1,6 @@
 from gameandgrade.submissions.models import Task, Exercise, UserID, Upload
-from django.contrib import admin
-from django.contrib.admin import BooleanFieldListFilter
+from django.contrib                  import admin
+from django.contrib.admin            import BooleanFieldListFilter
 
 class TaskAdmin(admin.ModelAdmin):
     fieldsets = [
