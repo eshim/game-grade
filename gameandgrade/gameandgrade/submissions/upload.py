@@ -9,4 +9,4 @@ class UploadForm(ModelForm):
     class Meta:
         # There are only two fields to be validated because other fields are to be modified after the validation
         model = Upload
-        fields = ('fileUpload','title',) 
+        fields = ('fileUpload','title',)
