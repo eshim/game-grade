@@ -8,7 +8,7 @@ class UserID(models.Model):
     Creates a user object that we can manipulate more so than the Django user
     """
     
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, verbose_name='Username')
     
     def __unicode__(self):
         return str(self.user.username)
@@ -57,13 +57,26 @@ class Upload(models.Model):
     the current user's ID and the task it is being submitted to, so that submissions are viewed organized by user and task 
     """
     
-    title = models.CharField(max_length=50)
+    title = models.CharField('File Name', max_length=50)
     fileUpload = models.FileField(upload_to='file_uploads')
-    userID = models.ForeignKey(User)
-    userID.short_description = 'User'
+    userID = models.ForeignKey(User, verbose_name='Username')
     task = models.ForeignKey(Task)
     uploadTime = models.DateTimeField('Uploaded On', auto_now_add=True)
     mostRecent = models.BooleanField('Most Recent', default=True)
     
     def __unicode__(self):
         return self.title
+    
+class UnitTest(models.Model):
+    """
+    Allows the instructor to upload a series of evaluators for testing students' code to make sure specific requirements are met.
+    """
+    
+    #  Command line should read:
+    #  python -m unittest -v (test module)
+    #  This should be repeated for every unit test evaluator uploaded.
+    #  Use ForeignKey if task-specific or ManyToMany if reusable
+    
+    name = models.CharField('Evaluator Name', max_length=50)
+    file = models.FileField(upload_to='instructor_files/evals')
+    tasks = models.ManyToManyField(Task, verbose_name='Associated Tasks')

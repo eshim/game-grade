@@ -36,9 +36,21 @@ def tasks(request):
     Displays tasks organized by start and end time
     """
     
-    tester = Upload.objects.all()
-    for rec in tester:
-        print "is %s most recent?:" % (rec.title), rec.mostRecent
+    
+    ########################
+    
+    #Just checking commandline testing
+    testFile = '/Users/frank_em/Documents/fizzbuzz_correct.py'  # Note - needs the full path with a leading "/"
+#    testFile = testFile.replace(" ","\ ")
+    cmdLine = 'python %s' % (testFile)  # Builds the command to be run by the shell 
+    print "cmdline", cmdLine
+    cmds = split(cmdLine)  # This makes the commands above readable to the shell.
+    print "cmds", cmds
+    p = Popen(cmds,stdout=open('/Users/frank_em/Documents/test.txt','w'))  # This executes the command created and saves output
+    stdout = p.communicate()  # Sends output to stdout to be saved.
+
+    #######################
+    
     
     filtSubs = Upload.objects.filter(
             userID=request.user).order_by('-uploadTime') # This gets all upload objects a particular user submitted
@@ -61,6 +73,7 @@ def tasks(request):
         context_instance=RequestContext(request))
 
 
+@login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't error.
 def uploadFile(request):
     """
     Uploads a submissions file to be viewed on the site
@@ -68,18 +81,14 @@ def uploadFile(request):
     
     def setMostRecent(upload):
         sameSubType = Upload.objects.filter(userID=upload.userID, task=upload.task)
-        print "sameSubs:", sameSubType
         
         for sub in sameSubType:
             sub.mostRecent = False
-            print "%s: %s" % (sub, sub.mostRecent)
             sub.save()
         
         upload.mostRecent = True
         upload.save()
         
-        print "upload:", upload.mostRecent
-
     
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
@@ -124,14 +133,19 @@ def evaluate(sender, **kwargs):
     """
     
     inPath = str(kwargs['instance'].fileUpload)  # The path to the user's uploaded code
+    print "in_orig", inPath
     outPath = inPath.replace("file_uploads","evaluated_code")  # The path to the generated PyLint output
+    print "out", outPath
     inPath = inPath.replace(" ","\ ")  # This prevents spaces in the inpath from becoming individual shell commands
+    print "in_new", inPath
     cmdLine = "pylint --reports=n --include-ids=y --disable=F,I,R,W " + inPath  # Builds the command to be run by the shell 
     cmds = split(cmdLine)  # This makes the commands above readable to the shell.
+    print "cmds", cmds
     p = Popen(cmds,stdout=open(outPath,'w'))  # This executes the command created and saves output
     stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
 
 
+@login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't error.
 def viewSub(request, subID):
     """
     Allows you to view a partcular submission's code and the problems PyLint has found with the code.
