@@ -73,9 +73,11 @@ class UnitTest(models.Model):
     """
     
     #  Command line should read:
-    #  python -m unittest -v (test module)
-    #  This should be repeated for every unit test evaluator uploaded.
-    #  Use ForeignKey if task-specific or ManyToMany if reusable
+    #      python -m unittest -v (test module)
+    #      This should be repeated for every unit test evaluator uploaded.
+    #  Use ManyToMany to point to Tasks
+    #  Get File object and then open the evaluators that match its task ID (i.e. filter 'taskID' in UploadFile against
+    #     'task' in UnitTest  
     
     name = models.CharField('Evaluator Name', max_length=50)
     file = models.FileField(upload_to='instructor_files/evals')
