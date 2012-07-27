@@ -1,4 +1,4 @@
-from gameandgrade.submissions.models import Task, Upload, UserID
+from gameandgrade.submissions.models import Task, Upload, UserID, UnitTest
 from gameandgrade.submissions.upload import UploadForm
 from gameandgrade                    import parser
 
@@ -16,7 +16,7 @@ from django.contrib.auth.models      import User
 from gameandgrade                    import settings
 from datetime                        import datetime
 
-from subprocess                      import Popen
+from subprocess                      import Popen, PIPE
 from shlex                           import split
 from os                              import makedirs, path
 
@@ -106,7 +106,11 @@ def uploadFile(request):
             except:
                 pass
             try:  # Try to make a directory with user's name if not created for PyLint output.
-                makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code', saveLocation))
+                makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code/pylint', saveLocation))
+            except:
+                pass
+            try:
+                makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code/unit_tests', saveLocation))
             except:
                 pass
             
@@ -129,19 +133,31 @@ def uploadFile(request):
 @receiver(post_save, sender=Upload)  # When an Upload object is saved, also do the following function
 def evaluate(sender, **kwargs):
     """
-    Will generate a PyLint output file that evaluates an uploaded file.
-    """
+    Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.    """
     
+    evals = UnitTest.objects.get(tasks=kwargs['instance'].task)
+    print 'evals', evals
     inPath = str(kwargs['instance'].fileUpload)  # The path to the user's uploaded code
     print "in_orig", inPath
-    outPath = inPath.replace("file_uploads","evaluated_code")  # The path to the generated PyLint output
-    print "out", outPath
-    inPath = inPath.replace(" ","\ ")  # This prevents spaces in the inpath from becoming individual shell commands
+    outPathLint = inPath.replace('file_uploads','evaluated_code/pylint')  # The path to the generated PyLint output
+    outPathTest = inPath.replace('file_uploads', 'evaluated_code/unit_tests')
+    print "out pylint", outPathLint
+    print "out unit tests", outPathTest
+    inPath = inPath.replace(' ','\ ')  # This prevents spaces in the inpath from becoming individual shell commands
     print "in_new", inPath
-    cmdLine = "pylint --reports=n --include-ids=y --disable=F,I,R,W " + inPath  # Builds the command to be run by the shell 
+    cmdLine = 'pylint --reports=n --include-ids=y --disable=F,I,R,W ' + inPath  # Builds the command to be run by the shell 
     cmds = split(cmdLine)  # This makes the commands above readable to the shell.
     print "cmds", cmds
-    p = Popen(cmds,stdout=open(outPath,'w'))  # This executes the command created and saves output
+    p = Popen(cmds,stdout=open(outPathLint,'w'))  # This executes the command created and saves output
+    stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
+    
+    evalPath = evals.file.path
+    evalPath = evalPath.replace(' ', '\ ')
+    print "evalPath",evalPath
+    cmdLine = 'python %s' % (evalPath)
+    cmds = split(cmdLine)
+    print "cmds", cmds
+    p = Popen(cmds,stderr=open(outPathTest,'w'))  # This executes the command created and saves output
     stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
 
 
@@ -154,7 +170,7 @@ def viewSub(request, subID):
     s = Upload.objects.get(pk=subID)  # Get the submission that was selected.
     currUser = request.user
     codePath = s.fileUpload.path
-    evalCodePath = codePath.replace("file_uploads","evaluated_code")  # This works since the only difference in paths are this.
+    evalCodePath = codePath.replace("file_uploads","evaluated_code/pylint")  # This works since the only difference in paths are this.
     
     with open(codePath, mode='r') as f:
         subString = f.read()    
