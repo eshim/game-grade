@@ -1,3 +1,0 @@
-************* Module testStuUpload1
-C0301:  2,0: Line too long (95/80)
-C0103:  1,0: Invalid name "testStuUpload1" (should match (([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$)
