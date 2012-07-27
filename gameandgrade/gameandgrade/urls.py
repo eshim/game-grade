@@ -8,8 +8,12 @@ urlpatterns = patterns('gameandgrade.submissions.views',
     url(r'^tasks/$', 'tasks',),
     # Upload View
     url(r'^tasks/uploadFile/$', 'uploadFile',),
+    # UploadPaste View
+    url(r'^uploadCode/$', 'uploadCode'),
     # Logout View
     url(r'^logout/$', 'logout_page'),
+    # New Submissions View
+    url(r'^subs/$', 'newSub'),
     # Submissions View
     url(r'^subs/(?P<subID>\d+)/$', 'viewSub'),
 )
