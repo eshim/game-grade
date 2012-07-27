@@ -16,9 +16,9 @@ from django.contrib.auth.models      import User
 from gameandgrade                    import settings
 from datetime                        import datetime
 
-from subprocess                      import Popen, PIPE
-from shlex                           import split
-from os                              import makedirs, path
+import subprocess
+import shlex
+import os
 
     
 def logout_page(request):
@@ -62,7 +62,7 @@ def uploadFile(request):
     """
     Uploads a submissions file to be viewed on the site
     """
-    
+        
     def setMostRecent(upload):
         sameSubType = Upload.objects.filter(userID=upload.userID, task=upload.task)
         
@@ -86,21 +86,23 @@ def uploadFile(request):
             saveLocation = str(upload_instance.userID)
             
             try:  # Try to make a directory with user's name if not created for file uploads.
-                makedirs(path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation))
+                os.makedirs(os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation))
             except:
                 pass
             try:  # Try to make a directory with user's name if not created for PyLint output.
-                makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code/pylint', saveLocation))
+                os.makedirs(os.path.join(settings.MEDIA_ROOT,'evaluated_code/pylint', saveLocation))
             except:
                 pass
             try:
-                makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code/unit_tests', saveLocation))
+                os.makedirs(os.path.join(settings.MEDIA_ROOT,'evaluated_code/unit_tests', saveLocation))
             except:
                 pass
             
             fileName = upload_instance.title  # This is what the uploaded file's name will be.
-            default_storage.save(path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName),myFile)  # Save to disc          
-            upload_instance.fileUpload = path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName)
+
+            default_storage.save(os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName), myFile)  # Save to disc          
+            upload_instance.fileUpload = os.path.join(settings.MEDIA_ROOT,'file_uploads', saveLocation, fileName)
+            
             upload_instance.save()  # post_save method is called to generate PyLint output from the uploaded file.
             
             setMostRecent(upload_instance)
@@ -117,53 +119,36 @@ def uploadFile(request):
 @receiver(post_save, sender=Upload)  # When an Upload object is saved, also do the following function
 def evaluate(sender, **kwargs):
     """
-<<<<<<< HEAD
-    Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.    """
-    
-    evals = UnitTest.objects.get(tasks=kwargs['instance'].task)
-=======
-    Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.
+    Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.    
     """
     
+    ###### NOTE: Do not need hashhex. Can just check if the pylint or unittest file exists, and if it doesn't
+    #            then do the following
+    
     evals = UnitTest.objects.filter(tasks=kwargs['instance'].task)
->>>>>>> fminio
-    print 'evals', evals
     inPath = str(kwargs['instance'].fileUpload)  # The path to the user's uploaded code
-    print "in_orig", inPath
     outPathLint = inPath.replace('file_uploads','evaluated_code/pylint')  # The path to the generated PyLint output
-    outPathTest = inPath.replace('file_uploads', 'evaluated_code/unit_tests')
-    print "out pylint", outPathLint
-    print "out unit tests", outPathTest
-    inPath = inPath.replace(' ','\ ')  # This prevents spaces in the inpath from becoming individual shell commands
-    print "in_new", inPath
-    cmdLine = 'pylint --reports=n --include-ids=y --disable=F,I,R,W ' + inPath  # Builds the command to be run by the shell 
-    cmds = split(cmdLine)  # This makes the commands above readable to the shell.
-    print "cmds", cmds
-    p = Popen(cmds,stdout=open(outPathLint,'w'))  # This executes the command created and saves output
-<<<<<<< HEAD
-    stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
     
-    evalPath = evals.file.path
-    evalPath = evalPath.replace(' ', '\ ')
-    print "evalPath",evalPath
-    cmdLine = 'python %s' % (evalPath)
-    cmds = split(cmdLine)
-    print "cmds", cmds
-    p = Popen(cmds,stderr=open(outPathTest,'w'))  # This executes the command created and saves output
-=======
->>>>>>> fminio
-    stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
-    
-    for test in evals:
-        evalPath = test.file.path
-        evalPath = evalPath.replace(' ', '\ ')
-        print "evalPath",evalPath
-        cmdLine = 'python %s' % (evalPath)
-        cmds = split(cmdLine)
-        print "cmds", cmds
-        p = Popen(cmds,stderr=open(outPathTest,'a'))  # This executes the command created and saves output
+    if not os.path.exists(outPathLint):
+        outPathTest = inPath.replace('file_uploads','evaluated_code/unit_tests')  # The path to the generated PyLint output
+        inPath = inPath.replace(' ','\ ')  # This prevents spaces in the inpath from becoming individual shell commands
+        cmdLine = 'pylint --reports=n --include-ids=y --disable=F,I,R,W ' + inPath  # Builds the command to be run by the shell 
+        cmds = shlex.split(cmdLine)  # This makes the commands above readable to the shell.
+        p = subprocess.Popen(cmds,stdout=open(outPathLint,'w'))  # This executes the command created and saves output
         stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
-
+        print "output", stdout
+        print "error", stderr
+                
+        for test in evals:
+            evalPath = test.file.path
+            evalPath = evalPath.replace(' ', '\ ')
+            print "evalPath",evalPath
+            cmdLine = 'python %s' % (evalPath)
+            cmds = shlex.split(cmdLine)
+            print "cmds", cmds
+            p = subprocess.Popen(cmds, stderr=subprocess.STDOUT, stdout=open(outPathTest,'a'))
+            stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
+            
 
 @login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't error.
 def viewSub(request, subID):
