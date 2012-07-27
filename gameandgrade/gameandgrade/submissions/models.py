@@ -72,13 +72,6 @@ class UnitTest(models.Model):
     Allows the instructor to upload a series of evaluators for testing students' code to make sure specific requirements are met.
     """
     
-    #  Command line should read:
-    #      python -m unittest -v (test module)
-    #      This should be repeated for every unit test evaluator uploaded.
-    #  Use ManyToMany to point to Tasks
-    #  Get File object and then open the evaluators that match its task ID (i.e. filter 'taskID' in UploadFile against
-    #     'task' in UnitTest  
-    
     name = models.CharField('Evaluator Name', max_length=50)
     file = models.FileField(upload_to='instructor_files/evals')
     tasks = models.ManyToManyField(Task, verbose_name='Associated Tasks')

@@ -36,22 +36,6 @@ def tasks(request):
     Displays tasks organized by start and end time
     """
     
-    
-    ########################
-    
-    #Just checking commandline testing
-    testFile = '/Users/frank_em/Documents/fizzbuzz_correct.py'  # Note - needs the full path with a leading "/"
-#    testFile = testFile.replace(" ","\ ")
-    cmdLine = 'python %s' % (testFile)  # Builds the command to be run by the shell 
-    print "cmdline", cmdLine
-    cmds = split(cmdLine)  # This makes the commands above readable to the shell.
-    print "cmds", cmds
-    p = Popen(cmds,stdout=open('/Users/frank_em/Documents/test.txt','w'))  # This executes the command created and saves output
-    stdout = p.communicate()  # Sends output to stdout to be saved.
-
-    #######################
-    
-    
     filtSubs = Upload.objects.filter(
             userID=request.user).order_by('-uploadTime') # This gets all upload objects a particular user submitted
     allTasks = Task.objects.all().order_by('-openTime')
@@ -133,9 +117,16 @@ def uploadFile(request):
 @receiver(post_save, sender=Upload)  # When an Upload object is saved, also do the following function
 def evaluate(sender, **kwargs):
     """
+<<<<<<< HEAD
     Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.    """
     
     evals = UnitTest.objects.get(tasks=kwargs['instance'].task)
+=======
+    Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.
+    """
+    
+    evals = UnitTest.objects.filter(tasks=kwargs['instance'].task)
+>>>>>>> fminio
     print 'evals', evals
     inPath = str(kwargs['instance'].fileUpload)  # The path to the user's uploaded code
     print "in_orig", inPath
@@ -149,6 +140,7 @@ def evaluate(sender, **kwargs):
     cmds = split(cmdLine)  # This makes the commands above readable to the shell.
     print "cmds", cmds
     p = Popen(cmds,stdout=open(outPathLint,'w'))  # This executes the command created and saves output
+<<<<<<< HEAD
     stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
     
     evalPath = evals.file.path
@@ -158,7 +150,19 @@ def evaluate(sender, **kwargs):
     cmds = split(cmdLine)
     print "cmds", cmds
     p = Popen(cmds,stderr=open(outPathTest,'w'))  # This executes the command created and saves output
+=======
+>>>>>>> fminio
     stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
+    
+    for test in evals:
+        evalPath = test.file.path
+        evalPath = evalPath.replace(' ', '\ ')
+        print "evalPath",evalPath
+        cmdLine = 'python %s' % (evalPath)
+        cmds = split(cmdLine)
+        print "cmds", cmds
+        p = Popen(cmds,stderr=open(outPathTest,'a'))  # This executes the command created and saves output
+        stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
 
 
 @login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't error.
