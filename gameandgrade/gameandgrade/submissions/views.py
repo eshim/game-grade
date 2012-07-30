@@ -11,6 +11,10 @@ from django.core.files.storage       import default_storage
 from django.shortcuts                import render_to_response
 from django.http                     import HttpResponseRedirect
 from django.template                 import RequestContext
+from django.core                     import files
+
+from django.db                       import models
+from django.core.files.base          import ContentFile 
 
 from django.contrib.auth.models      import User
 from gameandgrade                    import settings
@@ -62,7 +66,8 @@ def uploadFile(request):
     """
     Uploads a submissions file to be viewed on the site
     """
-        
+    
+    # The following function will set a mostRecent flag to true to determine a user's most recent submission for each task.
     def setMostRecent(upload):
         sameSubType = Upload.objects.filter(userID=upload.userID, task=upload.task)
         
@@ -116,41 +121,85 @@ def uploadFile(request):
     return render_to_response('GameAndGrade_Base_StudentTasks.html', {'form': form})
 
 
+def uploadCode(request):
+   """ 
+   Uploads the pasted code as a submissions file to be viewed on the site
+   """
+   if request.method == 'POST':
+       form = UploadCodeForm(dict(request.POST)) # Request File, but not a file/ That's why there's n
+
+       if form.is_valid():
+           fileName = request.POST['title'] # This is what the uploaded file's name will be.
+           code = request.POST['code'] #This requests the code input
+           taskID = request.POST['taskID'] #This requests the taskID
+           task = Task.objects.get(pk=taskID)  # Save the current task's ID to allow sorting in Tasks
+           user = request.user  # Saves the current user's id to ForeignKey to allow sorting in Tasks
+           userID = str(user)  #Converts the user's ID to string type for reference
+           
+           try:  # Try to make a directory with user's name if not created for file uploads.
+               makedirs(path.join(settings.MEDIA_ROOT,'file_uploads', userID))
+           except:
+               pass
+           try:  # Try to make a directory with user's name if not created for PyLint output.
+               makedirs(path.join(settings.MEDIA_ROOT,'evaluated_code', userID))
+           except:
+               pass
+           
+           upload_instance = Upload(title=fileName, userID=user, task=task) #Creating the upload instance
+           default_storage.save(path.join(settings.MEDIA_ROOT,'file_uploads', userID, fileName),ContentFile(code))
+           upload_instance.fileUpload = path.join(settings.MEDIA_ROOT, 'file_uploads', userID, fileName)
+           upload_instance.save()  # post_save method is called to generate PyLint output from the up
+
+           return HttpResponseRedirect(path.join("../subs",str(upload_instance.id)))
+       
+       
+def newSub(request):
+   """
+   Sends you to a new blank submission form
+   """
+
+   if request.method == 'POST':
+       form = UploadForm(request.POST)
+
+       if form.is_valid():
+           taskID = request.POST['taskID']
+
+       return render_to_response('ViewSubmissions.html',
+                             {'currSub': " ", 'evalSub': None, 'submission': None, 'taskID': request},
+                             context_instance=RequestContext(request))
+
+
 @receiver(post_save, sender=Upload)  # When an Upload object is saved, also do the following function
 def evaluate(sender, **kwargs):
     """
-    Will generate a PyLint output file that evaluates an uploaded file, and a Unit Test file checking code against requirements.    
+    Will generate a PyLint output file that evaluates an uploaded file and a Unit Test file that checks code against requirements.    
     """
-    
-    ###### NOTE: Do not need hashhex. Can just check if the pylint or unittest file exists, and if it doesn't
-    #            then do the following
     
     evals = UnitTest.objects.filter(tasks=kwargs['instance'].task)
     inPath = str(kwargs['instance'].fileUpload)  # The path to the user's uploaded code
     outPathLint = inPath.replace('file_uploads','evaluated_code/pylint')  # The path to the generated PyLint output
     
-    if not os.path.exists(outPathLint):
+    # The following if statement is to ensure that the code isn't repeated more than once, despite the save method being called
+    # multiple times.
+    if not os.path.exists(outPathLint):  
         outPathTest = inPath.replace('file_uploads','evaluated_code/unit_tests')  # The path to the generated PyLint output
         inPath = inPath.replace(' ','\ ')  # This prevents spaces in the inpath from becoming individual shell commands
         cmdLine = 'pylint --reports=n --include-ids=y --disable=F,I,R,W ' + inPath  # Builds the command to be run by the shell 
         cmds = shlex.split(cmdLine)  # This makes the commands above readable to the shell.
         p = subprocess.Popen(cmds,stdout=open(outPathLint,'w'))  # This executes the command created and saves output
         stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
-        print "output", stdout
-        print "error", stderr
-                
+        
+        # The following code will run a series of unit tet evaluators that the instructor will have uploaded for the task.       
         for test in evals:
             evalPath = test.file.path
             evalPath = evalPath.replace(' ', '\ ')
-            print "evalPath",evalPath
             cmdLine = 'python %s' % (evalPath)
             cmds = shlex.split(cmdLine)
-            print "cmds", cmds
             p = subprocess.Popen(cmds, stderr=subprocess.STDOUT, stdout=open(outPathTest,'a'))
-            stdout,stderr = p.communicate()  # Sends output to stdout to be saved.
+            stdout,stderr = p.communicate()
             
 
-@login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't error.
+@login_required(login_url='/login/')  # This is required until the concept of the Guest view is created so that code won't err.
 def viewSub(request, subID):
     """
     Allows you to view a partcular submission's code and the problems PyLint has found with the code.
@@ -159,7 +208,8 @@ def viewSub(request, subID):
     s = Upload.objects.get(pk=subID)  # Get the submission that was selected.
     currUser = request.user
     codePath = s.fileUpload.path
-    evalCodePath = codePath.replace("file_uploads","evaluated_code/pylint")  # This works since the only difference in paths are this.
+    evalCodePath = codePath.replace(
+            "file_uploads","evaluated_code/pylint")  # This works since the only difference in paths are this.
     
     with open(codePath, mode='r') as f:
         subString = f.read()    
