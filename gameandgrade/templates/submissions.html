@@ -1,0 +1,108 @@
+{% extends "base_site.html" %}
+
+{% block submissions %}
+
+<!--CodeMirror-->
+	<link rel="stylesheet" href="{{ STATIC_URL }}CodeMirror-2.3/lib/codemirror.css">
+<!--CodeMirror Themes-->
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/elegant.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/neat.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/erlang-dark.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/night.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/monokai.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/cobalt.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/eclipse.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/rubyblue.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/lesser-dark.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/xq-dark.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/ambiance.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/blackboard.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}CodeMirror-2.3/theme/vibrant-ink.css" rel="stylesheet" type="text/css" />
+<!-- JQuery -->
+<link href="{{ STATIC_URL }}jQueryCore/css/ui-lightness/jquery-ui-1.8.21.custom.css"rel="stylesheet" />
+<!-- Bootstrap -->
+<link href ="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet" />
+<link href ="{{ STATIC_URL }}css/bootstrap-responsive.min.css" rel="stylesheet" />	
+<!-- Customise -->
+<link href ="{{ STATIC_URL }}css/GameAndGrade_Base.css" rel="stylesheet" />
+<link href ="{{ STATIC_URL }}css/bootstrap-customise.css" rel="stylesheet" />	
+
+<div id="contentContainer">
+		
+		<!-- <div id="submissionCode_submissionContent"> -->
+			<!--<a id="submissionCode_backButton" href=/tasks/">Back to Tasks</a>-->
+	<div id="submissionCode_submissionNavBar">
+		<div id="submissionCode_submissionTitle">{{subs.id}}</div>
+		<div id="submissionCode_submissionNavButtonsContainer">
+		<ul id="submissionCode_submissionNav">
+		<li><a href="/tasks/{{ subs.task.id }}/{{ firstSub.id }}/">First</a></li>
+		<li><a href="/tasks/{{ subs.task.id }}/{{ previousSub.id }}/">Previous</a></li>
+		<li><a href="/tasks/{{ subs.task.id }}/{{ nextSub.id }}/">Next</a></li>
+		<li><a href="/tasks/{{ subs.task.id }}/{{ latestSub.id }}/">Latest</a></li>
+		</ul>
+		</div>
+	</div>
+	<div id="submissionCode_codeEditorPylintOutputWrapper">
+		<textarea id="codeForm" name="code">{{ currSub }}</textarea>
+		<div id ="code-evaluation-tabs"> 
+			<div id="tab-container">
+				<ul>
+					<li id="li-tab1" onclick = "tab('tab1')"><a>Pylint Flags</a></li>
+					<li id="li-tab2" onclick = "tab('tab2')"><a>Unit Test Flags</a></li>
+				</ul>
+			</div>
+			<div id="tab1" style=" height=100%;">
+				{% autoescape off %}
+					{{ subPylint }}
+				{% endautoescape %}
+			</div> 
+			<div id="tab2" style="display:none; height=100%;">
+				{% autoescape off %}
+					<form action="">
+					{% for entry in subUnitTest %}
+						<input type ="checkbox" name="test" {% ifequal entry.4 "ok" %} checked {% endifequal %}> {{ entry.0 }} {{entry.3}}
+						</li></br>
+					{% endfor %}
+					</form>
+				{% endautoescape %}
+			</div>
+		</div>
+	</div>
+	<!-- </div> "submissionCode_submissionContent" -->  
+	<div id="submissionCode_submissionOptions">
+		
+		<p>Select a theme: 
+		<select id=select>
+		    <option selected>default</option>
+		    <option>ambiance</option>
+		    <option>blackboard</option>
+		    <option>cobalt</option>
+		    <option>eclipse</option>
+		    <option>elegant</option>
+		    <option>erlang-dark</option>
+		    <option>lesser-dark</option>
+		    <option>monokai</option>
+		    <option>neat</option>
+		    <option>night</option>
+		    <option>rubyblue</option>
+		    <option>vibrant-ink</option>
+		    <option>xq-dark</option>
+		</select>
+		<!-- <button type="submit" onclick="submitCode();">Submit Code</button> -->
+		</p>
+	</div>
+
+	<!-- Javascript placed at end to load quickly  -->
+	<!--CodeMirror-->
+	<script src="{{ STATIC_URL }}CodeMirror-2.3/lib/codemirror.js"></script>
+	<script src="{{ STATIC_URL }}CodeMirror-2.3/mode/python/python.js"></script>
+	<!--CodeMirror Add-ons-->
+	<script src="{{ STATIC_URL }}CodeMirror-2.3/lib/util/searchcursor.js"></script> <!--Necessary for match-highlighting-->
+	<script src="{{ STATIC_URL }}CodeMirror-2.3/lib/util/match-highlighter.js"></script>
+	<!--jQuery-->
+	<script src="{{ STATIC_URL }}jQueryCore/js/jquery-1.7.2.min.js"></script>
+	<!--Custom Javascript -->
+	<script type="text/javascript" src="{{ STATIC_URL }}Javascript/Base.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}Javascript/Base_SubmissionCode.js"></script>
+
+{% endblock %}

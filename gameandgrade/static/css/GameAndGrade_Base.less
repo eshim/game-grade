@@ -1,0 +1,646 @@
+/*Mixins and Variables
+-------------------------------- */
+
+.placeholderOutline {
+/*Simple black border to highlight placement*/
+  border:solid black 2px;
+}
+
+.roundedCorners(@radius: 5px) {
+/*Rounded corners, degree of curvature set by argument*/
+  border-radius:@radius;
+  -webkite-border-radius:@radius;
+  -moz-border-radius:@radius;
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@headerBackground: #c2dbef;
+@headerTextColor: #2e6797;
+
+.taskHeaderFont {
+  color: @headerTextColor;
+  font: 1.3em Arial, Helvetica, sans-serif; 
+  font-weight:bold;
+}
+
+.paddingStandard {
+  padding: 10px 10px;
+}
+
+.paddingInside {
+  padding: 5px 0px 5px 10px;
+}
+
+/*General Style
+ --------------------------------*/
+//Remove Defaults
+html, body {
+  background-color: #ffffff;
+  padding:0;
+  margin: 0;
+  height:100%;
+  position:relative;
+} 
+
+p {
+  font: .8em normal Arial, Helvetica, sans-serif; 
+}
+
+a:link {text-decoration:none;}
+
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/*Header
+ --------------------------------*/
+
+div#headerBackground {
+  width: 100%;
+  height: 55px;
+  background-color: #003366;
+  box-shadow: 3px 3px 4px #000;
+  position: relative;
+  display: block;
+}
+
+div#headerContainer {
+  height: 70px;
+  
+}
+
+div#headerLogo {
+  font: 2em Arial, Helvetica, sans-serif;
+  color: white;
+  float: left;
+  margin: 10px 0 0 10px;
+  
+}
+
+div#accountContainer {
+  height: 50 px;
+  float: right;
+  color: white;
+  margin: 0 .6em;
+}
+
+div#accountInfo {
+  float: left;
+}
+
+div#accountInfo p {
+  text-align: center;
+  padding-right: 10px;
+  padding-top: 15px;
+  padding-bottom: 0px;
+  
+}
+
+div#accountOptionsContainer {
+  float: left;
+}
+
+ul#accountOptionsList {
+  height: 100%;
+  float: left;
+}
+
+ul#accountOptionsList li {
+  border-left: solid grey 1px;
+  width: 55px;
+  padding-top: 25px;
+  padding-bottom: 0px;
+}
+
+ul#accountOptionsList li a{
+  margin-top: 30px;
+  color: lighten(grey, 20%);
+}
+
+ul#accountOptionsList li a:hover{
+  color: white;
+  font-weight:normal;
+}
+
+div#searchBar {
+  float: left;
+  height: 100%;
+  border-left: solid grey 1px;
+  display:inline;
+  
+}
+form#search  {
+  padding-top: 25px;
+  padding-bottom: 0px;
+}
+/* Site Content Container
+-------------------------------- */
+#contentContainer {
+  float:center;
+  width: 95%;
+  min-height:30em;
+  height:80%;
+  background-color:white;
+  margin: 1% auto;
+  padding: 1%;
+  position:relative;
+}
+
+@contentContainerWidth: 900px;
+
+/*Task Organization
+ --------------------------------*/
+.tasksContainer{
+  width: 98%
+  margin: 1%;
+  background-color: white;
+  position:relative;
+}
+
+.tasksContainerHeader {
+  margin: 0px 0px 10px 0px;
+  background-color: @headerBackground;
+  .taskHeaderFont;
+  font-size:1.5em;
+  height:auto;
+  .paddingStandard;
+  .roundedCorners;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+div.noTasks {
+  text-align: center;
+  .taskHeaderFont;
+  font-size: 30px;
+}
+
+div.taskField {
+  padding: 0px 0px 15px 20px;
+}
+
+.taskHeader {
+  height:30px;
+  background-color: @headerBackground;
+  .taskHeaderFont;
+  .paddingStandard;
+  .roundedCorners;
+  overflow: hidden;
+  cursor:pointer;
+}
+
+.hidden {
+  display:none;
+}
+
+.closedHighlight {
+  background-color: lighten(@headerBackground, 9%);
+  color: lighten(@headerTextColor, 30%);
+}
+
+.expand {
+  height: auto;
+}
+
+.tasksContainerHeader:hover, .taskHeader:hover {
+  background-color: darken(@headerBackground, 9%);
+  color: darken(@headerTextColor, 10%);
+}
+
+
+div.taskTitle {
+  background-color:inherit;
+  float:left;
+  display: block;
+}
+
+div.toggleDescrip {
+  float:right;
+  display:block;
+  cursor:pointer;
+  font: 15px normal;
+  font-family: Arial, Helvetica, sans-serif; 
+  text-decoration:underline; 
+}
+
+div.taskDescrip {
+  margin:40px 0px 10px;
+  position:relative;
+  display:block; 
+  font: .6em normal Arial, Helvetica, sans-serif; 
+  text-align:justify;
+}
+
+.taskStartEndContainer {
+  font: .6em Arial, Helvetica, sans-serif; 
+  font-weight: bold;
+  display:inline;
+  float:right;
+  width: 250px;
+  height: auto;
+}
+
+.taskStartEndField {
+  vertical-align: center; 
+  position:relative;
+  height:auto;
+  display: block;
+}
+
+.taskStartEndLabel{
+  display:inline;
+}
+
+.taskStartEndTime {
+  display:inline;
+  float:right;
+}
+.taskRewardInfo {
+  font: 14px normal Arial, Helvetica, sans-serif; 
+  position:relative;
+  display:block;
+  float: right;
+}
+
+
+/*Submissions Organization
+ ---------------------------------*/
+
+div.submissionField {
+  .paddingInside;
+  display: none;
+}
+
+
+div.submissionEntry {
+  font-family: Arial, Helvetica, sans-serif; 
+  font-weight: bold;
+  display: inline;
+  position:relative;
+
+}
+
+a#displayCopypaste.link, a#displayCopypaste.visited {
+  display: block;
+  font-weight: bold;
+  background-color: #8D96A8;
+  color:white;
+  width: 120 px;
+  text-align:center;
+  padding: 4px;
+  
+}
+
+a#displayCopypaste.hover, a#displayCopypaste.active {
+  background-color: #596181;
+}
+
+form#codeUpload {
+  display:inline;
+  float: right;
+}
+textarea#copypaste {
+  min-width: 600px;
+  max-width: 880px;
+  min-height: 200px;
+  border: solid #CCCCCC 3px;
+  padding: 5px;
+  font-family: Tahoma, sans-serif;
+  float:right;
+  display:none;
+}
+
+.tab{
+  .placeholderOutline;
+}
+
+/*Instructor View of Student Submissions
+ --------------------------------*/
+div.dataTables_wrapper {
+  width: 60%;
+}
+
+table.studentSubmissionsTable {
+  border-collapse: collapse;
+  font: .75em "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width:100%;
+  text-align:left;
+}
+thead {
+  border: solid 1px #C0C0C0;
+  display: table-header-group;
+  padding: 1px;
+  .noSelect;
+
+}
+
+table.studentSubmissionsTable td, table.studentSubmissionsTable th {
+  padding: 3px;
+  border: solid 1px #C0C0C0;
+}
+
+
+table.studentSubmissionsTable thead th {
+  font: bold;
+  background-color: lighten(@headerBackground, 10%);
+  cursor:pointer;
+
+}
+
+tr.odd{
+  background-color: #F0F0F6;
+}
+
+.sorting_desc {
+  background-image:url('../images/desc.gif');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.sorting_asc {
+  background-image:url('../images/asc.gif');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.header:hover {
+  background-color: gray;
+  color:white;
+}
+
+.dataTables_empty {
+  text-align: center;
+}
+#sortTable_info {
+  font: .75em "Trebuchet MS", Arial, Helvetica, sans-serif;
+  display:inline;
+}
+
+
+tbody tr{
+  cursor:pointer;
+}
+table.studentSubmissionsTable tbody tr:hover,{
+  background-color: gray;
+  color: white;
+}
+
+.dataTables_filter input {
+  display:inline;
+  float:left;
+}
+
+.paging_two_button {
+  display:inline;
+  float: right;
+  font: .75em "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width: 130px;
+}
+
+.paginate_disabled_previous, .paginate_disabled_next {
+  color: lighten(gray, 15%);  
+  padding-left: 20px;
+}
+
+.paginate_enabled_previous, .paginate_enabled_next {
+  color: black;
+  text-decoration: underline;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+tr.odd.selected, tr.even.selected {
+  background-color: gray;
+  color: white;
+}
+
+
+/*Base_SubmissionCode Styles
+ -----------------------------------------------*/
+
+// #submissionCode_submissionContent {
+  // width:100%;
+  // overflow:hidden;
+  // position:relative;
+  // float:left;
+// }
+
+#submissionCode_backButton {
+  display: block;
+  float: left;
+  font: .8em normal Arial, Helvetica, sans-serif ;
+  color: #C4C4C4; 
+}
+
+#submissionCode_submissionNavBar {
+  display: block;
+  margin: 0 auto .5em;
+  width: 50%;
+  padding: 0;
+  
+}
+
+#submissionCode_submissionNavButtonsContainer {
+  //To shrink the width of the navigation
+  width: 50%;
+  margin: 0 auto;
+}
+#submissionCode_submissionNavButtons ul , li{
+  display: inline-block;
+  width: 23%;
+  text-align: center;
+  font: .8em normal Arial, Helvetica, sans-serif ;
+  color: #C4C4C4; 
+}
+
+a{
+  color: gray;
+}
+
+a:hover {
+  color: black;
+  font-weight:bold;
+}
+
+#submissionCode_submissionTitle {
+  font: 1em bold Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+#submissionCode_submissionOptions {
+  font: 1em normal Arial, Helvetica, sans-serif;
+  width: 49.5%;
+}
+
+select {
+  display:inline;
+}
+
+button {
+  display: inline;
+  float: right;
+}
+
+#test{
+  border: 1px solid red;
+  height:100%;
+  width:49%;
+  display:inline-block;
+  float:right;
+}
+
+#submissionCode_codeEditorPylintOutputWrapper {
+  margin: 0 auto;
+  width:100%;
+  height: 86%;
+  padding: 0;
+  display:inline-block;
+
+}
+
+#code-evaluation-tabs {
+  display: box;
+  display: -moz-box;
+  display: -webkit-box;
+  box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-box-orient: vertical;
+  -moz-box-align : start;
+  -webkit-box-align : start;
+  box-align: start;
+  -moz-box-pack : start;
+  -webkit-box-pack: start;
+  box-pack: start;
+  float:right;
+  right:0;
+  width:49%;
+  margin-top: 0;
+  height:100%;
+  
+
+}
+
+#code-evaluation-tabs #tab-container {
+  height:25px;
+}
+
+#code-evaluation-tabs ul {
+  display:block;
+  padding: 0px;
+  margin: 0px;
+  list-style-type: none;
+}
+
+#code-evaluation-tabs ul li {
+  height: 24px;
+  margin-right: 50px;
+  display: inline-block;
+  cursor: hand; 
+  cursor: pointer; 
+  clear: none;
+}
+
+
+#code-evaluation-tabs ul li a {
+  position: relative;
+  display: block;
+  line-height: 24px;
+  background: #f6f6f6;
+
+  border: 1px solid #ccc;
+  border-bottom: 0px;
+  
+  
+  /* The following four lines are to make the top left and top right corners of each tab rounded. */
+  -moz-border-radius-topleft: 4px;
+  border-top-left-radius: 4px;
+  -moz-border-radius-topright: 4px;
+  border-top-right-radius: 4px;
+  /* end of rounded borders */
+  
+  width: 130px;
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#code-evaluation-tabs ul li a:hover {
+  text-decoration: underline; // a very simple effect when hovering the mouse on tab
+}
+
+#code-evaluation-tabs #tab1,#tab2{
+  width:100%;
+  overflow-y:auto;
+  overflow-x:hidden;
+  border:1px solid grey;
+  font-family: monospace;
+
+  box-flex: 1;
+  -moz-box-flex : 1;
+  -webkit-box-flex : 1;
+}
+
+#code-evaluation-tabs #tab1,#tab2 form{
+  width:100%;
+  text-align: justify;
+}
+
+/***********************
+ * CodeMirror Styling *
+************************/
+
+#codeForm {
+  // display:inline;z 
+  // position:relative;
+  // float:left;
+  // overflow-y:hidden;
+}
+
+.CodeMirror {
+  border: solid black 1px;
+  width:49%;
+  height:100%;
+  display:inline-block;
+}
+
+.CodeMirrorForm {
+  // border-top: 1px solid black;
+  // border-bottom: 1px solid black;
+ // height:100%;
+}
+.CodeMirror-scroll {
+  height:100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+  
+span.CodeMirror-matchhighlight { 
+  background: #e9e9e9;
+}
+
+.CodeMirror-focused span.CodeMirror-matchhighlight { 
+  background: #e7e4ff;
+}
+
+/*Media Breakpoints
+ -------------------*/
+
+@media(max-width: 47em) {
+ #submissionCode_pylintOutput{
+   width:100%;
+   margin: 1em auto auto;
+ }
+}

@@ -1,0 +1,23 @@
+<!-- Not sure if this is necessary as a django template to even be included... -->
+
+<div class="navbar clearfix navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="">Game and Grade</a> 
+			<ul id="user-links">
+				<li>
+				{% if user.is_authenticated %}
+					<a class="brand" href=""> {{ user.username }} </a>
+				{% endif %}
+				</li>
+				<li>
+				{% if user.is_authenticated %}
+					<a class="brand" href='/logout/'>Logout</a>
+				{% else %}
+					<a class="brand" href="/login/?next={{request.path}}">Login</a>
+				{% endif %}
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

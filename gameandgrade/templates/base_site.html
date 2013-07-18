@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Game and Grade</title>
+	<!-- JQuery -->
+	<link href="{{ STATIC_URL }}jQueryCore/css/ui-lightness/jquery-ui-1.8.21.custom.css"rel="stylesheet" />
+	<!-- Bootstrap -->
+	<link href ="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet" />
+	<link href ="{{ STATIC_URL }}css/bootstrap-responsive.min.css" rel="stylesheet" />	
+	<!-- Customise -->
+	<link href ="{{ STATIC_URL }}css/GameAndGrade_Base.css" rel="stylesheet" />
+	<link href ="{{ STATIC_URL }}css/bootstrap-customise.css" rel="stylesheet" />
+</head>
+<body>
+	{% include "navbar.html" %}
+	<div class="container">
+		{% block tasks %}{% endblock %}
+		{% block login %}{% endblock %}
+	</div> 
+	{% block submissions %}{% endblock %}
+	
+	<!-- Javascript placed at end to load quickly  -->
+	<script src="{{ STATIC_URL }}jQueryCore/js/jquery-1.7.2.min.js"></script>
+	<script src="{{ STATIC_URL }}jQueryCore/js/jquery-ui-1.8.21.custom.min.js"></script>
+	<!-- <script src="{{ STATIC_URL }}Javascript/less-1.3.0.min.js" ></script> -->
+<!-- 		<script type="text/javascript" src="{{ STATIC_URL }}Javascript/ChangeText.js"></script> -->
+	<script src="{{ STATIC_URL }}Javascript/Base.js"></script>
+</body>
+</html>

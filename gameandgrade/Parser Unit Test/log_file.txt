@@ -1,0 +1,21 @@
+test_badOrGood (testParserUnit.GeneralParserTestSuite)
+This test checks if the parser module distinguishes between bad and good code ... ok
+test_badOutput (testParserUnit.GeneralParserTestSuite)
+This test checks if the parsed output for bad code is an empty string ... ok
+test_emptyOrBad (testParserUnit.GeneralParserTestSuite)
+This test checks if the parser module distinguishes between empty and bad code ... ok
+test_emptyOrGood (testParserUnit.GeneralParserTestSuite)
+This test checks if the parser module distinguishes between empty and good code ... ok
+test_emptyOutput (testParserUnit.GeneralParserTestSuite)
+This test checks if the parsed output for empty code is an empty string ... ok
+test_goodOutput (testParserUnit.GeneralParserTestSuite)
+This test checks if the parsed output for good code is an empty string ... ok
+test_pylintDocstring (testParserUnit.PylintCodeTestSuite)
+This test checks if the parser correctly determines that a docstring is absent ... skipped 'pylint codes for later'
+test_pylintSpacePrecedingOperator (testParserUnit.PylintCodeTestSuite)
+This test checks if the parser correctly determines that a docstring is absent ... skipped 'pylint codes for later'
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.357s
+
+OK (skipped=2)
