@@ -343,11 +343,6 @@ def viewSub(request, taskID, subID):
     
     codePath = s.fileUpload.path
     
-    latestSub = locateLatestSub(request, s)
-    nextSub = locateNextSub(request,s)
-    previousSub = locatePreviousSub(request,s)
-    firstSub = locateFirstSub(request,s)
-    
     with open(codePath, mode='r') as f:
         codeString = f.read()
     
@@ -363,6 +358,6 @@ def viewSub(request, taskID, subID):
     
     return render_to_response('submissions.html', 
                               {'currSub': codeString, 'subPylint': parsedPylint, 
-                               'subUnitTest': parsedUnitTest,'subs': s, 'nextSub': nextSub, 
-                               'previousSub': previousSub, 'firstSub': firstSub, 'latestSub': latestSub}, 
+                               'subUnitTest': parsedUnitTest,'subs': s, 'nextSub': locateNextSub(request,s), 
+                               'previousSub': locatePreviousSub(request,s), 'firstSub': locateFirstSub(request,s), 'latestSub': locateLatestSub(request, s)}, 
                                 context_instance=RequestContext(request))
