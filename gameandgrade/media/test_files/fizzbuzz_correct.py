@@ -1,11 +1,14 @@
 """
 This file is to be used to test what 'perfect code' looks like in PyLint
 """
-
-for count in range(1, 31):
+def fizzbuzz(count):
+#    for count in range(1, 31):
     if count % 3 == 0 and count % 5 == 0: 
-        print "FizzBuzz!"
+#        print "FizzBuzz!"
+        return "FizzBuzz!"
     elif count % 3 == 0: 
-        print "Fizz!"
+#        print "Fizz!"
+        return "Fizz!"
     elif count % 5 == 0: 
-        print "Buzz!"
+#        print "Buzz!"
+        return "Buzz!"
