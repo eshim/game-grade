@@ -17,7 +17,7 @@ Software Requirements
 - south 
 
 
-Installing and running
+Installation and Setup
 ======================
 
 #### On a *nix shell, do:
@@ -27,7 +27,12 @@ Installing and running
 ```bash
 ~/$ git clone https://github.com/plikarish/game-grade.git
 ~/$ ...cloning in to game-grade
-~/$ virtualenv quokka-env
+(authentication)
+~/$ cd gamegrade
+~/$ python manage.py syncdb
+~/$ Syncing ...
+~/S Creating tables ...
+
 ~/$ ... creating virtualenv in quokka-env........
 ~/$ python manage.py runserver
 ```
