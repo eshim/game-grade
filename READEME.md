@@ -32,8 +32,10 @@ Installation and Setup
 ~/$ python manage.py syncdb
 ~/$ Syncing ...
 ~/S Creating tables ...
-
-~/$ ... creating virtualenv in quokka-env........
+(create super user)
+~/$ ./manage.py migrate submissions
+~/$ Running migrations for submissions:
+(migration occurs)
 ~/$ python manage.py runserver
 ```
 
