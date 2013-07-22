@@ -17,12 +17,10 @@ Software Requirements
 - south 
 
 
-Installation and Setup
-======================
+Setup
+=====
 
 #### On a *nix shell, do:
-
-# to do: test this process
 
 ```bash
 ~/$ git clone https://github.com/plikarish/game-grade.git
@@ -31,11 +29,15 @@ Installation and Setup
 ~/$ cd gamegrade
 ~/$ python manage.py syncdb
 ~/$ Syncing ...
-~/S Creating tables ...
+~/$ Creating tables ...
 (create super user)
 ~/$ ./manage.py migrate submissions
 ~/$ Running migrations for submissions:
 (migration occurs)
+```
+#### To run the application, do:
+
+```bash
 ~/$ python manage.py runserver
 ```
 
