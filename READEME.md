@@ -39,6 +39,7 @@ Setup
 
 ```bash
 ~/$ python manage.py runserver
+~/$ Validating models...
 ```
 
 (format taken from https://github.com/rochacbruno/quokka/blob/master/README.md)
