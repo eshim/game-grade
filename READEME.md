@@ -12,7 +12,7 @@ Software Requirements
 =====================
 - pylint
 - Python 2.7
-- Django
+- Django 1.5.1
 - sqlite3
 - south 
 
