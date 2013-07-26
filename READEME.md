@@ -64,5 +64,11 @@ Use
 4. Fill out the required information and click on the task you would like the unit test to be associated with
 5. Click on the "Save" button to the bottom right
 
+#### Setup email server (if gmail):
+1. Open settings.py
+2. Find "Email Settings"
+3. Replace EMAIL_HOST_USER string with the email preferred
+4. Replace EMAIL_HOST_PASSWORD string with the password
+
 
 (format taken from https://github.com/rochacbruno/quokka/blob/master/README.md)
