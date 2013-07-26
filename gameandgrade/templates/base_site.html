@@ -11,12 +11,16 @@
 	<!-- Customise -->
 	<link href ="{{ STATIC_URL }}css/GameAndGrade_Base.css" rel="stylesheet" />
 	<link href ="{{ STATIC_URL }}css/bootstrap-customise.css" rel="stylesheet" />
+	<link href ="{{ STATIC_URL }}css/authentication.css" rel="stylesheet" />
+
+
 </head>
 <body>
 	{% include "navbar.html" %}
 	<div class="container">
-		{% block tasks %}{% endblock %}
+		{% block auth_form %}{% endblock %}
 		{% block login %}{% endblock %}
+		{% block tasks %}{% endblock %}
 	</div> 
 	{% block submissions %}{% endblock %}
 	

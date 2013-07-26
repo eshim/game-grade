@@ -1,0 +1,104 @@
+
+/*Instructor View of Student Submissions
+ --------------------------------*/
+
+/*
+ * not in use atm
+ */
+div.dataTables_wrapper {
+  width: 60%;
+}
+
+table.studentSubmissionsTable {
+  border-collapse: collapse;
+  font: .75em "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width:100%;
+  text-align:left;
+}
+thead {
+  border: solid 1px #C0C0C0;
+  display: table-header-group;
+  padding: 1px;
+  .noSelect;
+
+}
+
+table.studentSubmissionsTable td, table.studentSubmissionsTable th {
+  padding: 3px;
+  border: solid 1px #C0C0C0;
+}
+
+
+table.studentSubmissionsTable thead th {
+  font: bold;
+  background-color: lighten(@headerBackground, 10%);
+  cursor:pointer;
+
+}
+
+tr.odd{
+  background-color: #F0F0F6;
+}
+
+.sorting_desc {
+  background-image:url('../images/desc.gif');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.sorting_asc {
+  background-image:url('../images/asc.gif');
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+.header:hover {
+  background-color: gray;
+  color:white;
+}
+
+.dataTables_empty {
+  text-align: center;
+}
+#sortTable_info {
+  font: .75em "Trebuchet MS", Arial, Helvetica, sans-serif;
+  display:inline;
+}
+
+
+tbody tr{
+  cursor:pointer;
+}
+table.studentSubmissionsTable tbody tr:hover,{
+  background-color: gray;
+  color: white;
+}
+
+.dataTables_filter input {
+  display:inline;
+  float:left;
+}
+
+.paging_two_button {
+  display:inline;
+  float: right;
+  font: .75em "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width: 130px;
+}
+
+.paginate_disabled_previous, .paginate_disabled_next {
+  color: lighten(gray, 15%);  
+  padding-left: 20px;
+}
+
+.paginate_enabled_previous, .paginate_enabled_next {
+  color: black;
+  text-decoration: underline;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+tr.odd.selected, tr.even.selected {
+  background-color: gray;
+  color: white;
+}

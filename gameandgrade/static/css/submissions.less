@@ -1,0 +1,103 @@
+
+
+/***********************
+ * submissions Styles *
+************************/
+
+/**
+ * Centered container for submission navigation
+ */
+
+#navBar {
+  display: block;
+  margin: 0 auto .5em;
+  width: 50%;
+  padding: 0;
+}
+
+#subTitle {
+  font: 1em bold Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+#navButtonsContainer {
+  width: 50%;
+  margin: 0 auto;
+}
+
+#navButtons ul , li {
+  display: inline-block;
+  width: 23%;
+  text-align: center;
+  font: .8em normal Arial, Helvetica, sans-serif ;
+  color: #C4C4C4; 
+}
+
+// a {
+  // color: gray;
+// }
+// 
+// a:hover {
+  // color: black;
+  // font-weight:bold;
+// }
+
+
+/***********************
+ * CodeMirror Styling *
+************************/
+
+/**
+ * Ensure that the CodeMirror element fills its parent container.
+ */
+
+.CodeMirror {
+  width:100%;
+  height:100%;
+}
+
+/**
+ * Ensure that the CodeMirror scrollbar appears when necessary.
+ */
+
+.CodeMirror-scroll {
+  height:100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+  
+/**
+ * Enable CodeMirror Match Highlighting.
+ */  
+  
+span.CodeMirror-matchhighlight { 
+  background: #e9e9e9;
+}
+
+
+/**
+ * Make elements fill their parent container
+ */
+
+.fillheight{
+  height:100%;
+}
+
+/**
+ * Give span elements a border and scrollbar when necessary.
+ */
+
+.span6{
+  border:1px solid black;
+  overflow-y:auto;
+}
+
+/*Media Breakpoints
+ -------------------*/
+
+@media(max-width: 47em) {
+  .fillheight{
+  height:75%;
+  }
+}

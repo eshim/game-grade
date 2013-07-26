@@ -1,0 +1,14 @@
+{% extends "base_site.html" %}
+
+{% block auth_form %}
+
+<div class="auth-form">
+	<div class="auth-form-header">
+		<h4>{% block title %}{% endblock %}</h4>
+	</div>
+	<div class="auth-form-content">
+	{% block content %}{% endblock %}
+	</div>
+</div>
+
+{% endblock %}
